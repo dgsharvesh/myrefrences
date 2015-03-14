@@ -1,0 +1,99 @@
+
+/*
+*For initilizing datatable with fixed header
+*/
+
+function setFixedHeaderTable()
+{
+    var oTable = $('#tblList').dataTable({
+        "sScrollX": "100%",
+        "bScrollCollapse": true,
+        "bDestroy": true,
+        "bAutoWidth": false,
+        "sScrollY": 200,
+        "bJQueryUI": false,
+        "bPaginate": false,
+        "bFilter": false,
+        "ordering": false
+
+    });
+    new $.fn.dataTable.FixedColumns(oTable);
+}
+function tableOnClick()
+{
+    $("#tblList").on("click", "tr", function (e) {
+        operation = "E";
+        $("tr").removeClass("highlight");
+        $(this).addClass("highlight");
+        selected_txn_lineid = -1;
+        selected_txn_lineid = parseInt($(this).attr('data-href').replace("line_id", ""));
+        readSelectedTxn();
+    });
+}
+
+
+/*
+*For initilizing datatable with remote data
+*/
+
+function setDataTable()
+            {
+
+
+                var table = $('#ExcepTbl').DataTable({
+                    "bAutoWidth": false,
+                    "sScrollX": "100%",
+                    "sScrollY": "400px",
+                    "bScrollCollapse": true,
+                    "bDestroy": true,
+                    "bJQueryUI": false,
+                    "bPaginate": true,
+                    "bLengthChange": false,
+                    "bFilter": true,
+                    "processing": false,
+                    "serverSide": false,
+                    "ajax": serverurl ,
+                    "columns": [
+                        {"sTitle": " A", "sClass": "left", "data": "A"},
+                        {"sTitle": " B", "sClass": "left", "data": "B"},
+                        {"sTitle": "C", "sClass": "right", "data": "C"},
+                        {"sTitle": "D", "sClass": "left", "data": "D"},
+                        {"sTitle": "E ", "sClass": "right", "data": "E"},
+                        {"sTitle": "F ", "sClass": "right", "data": "F"},
+                        {"sTitle": "G ", "sClass": "right", "data": "G"}
+
+                    ],
+                    "columnDefs": [
+                        {"visible": false, "targets": 0}
+                    ],
+                    "order": [[0, 'asc'],[2, 'asc']],
+                   "displayLength": 10,
+                    "drawCallback": function(settings) {
+                        var api = this.api();
+                        var rows = api.rows({page: 'current'}).nodes();
+                        var last = null;
+                        api.column(0, {page: 'current'}).data().each(function(group, i) {
+                            if (last !== group) {
+                                $(rows).eq(i).before(
+                                        '<tr class="group"><td colspan="7"><div style=" background-color: #DCDCDC; font-weight:bold;">' + group + '</div></td></tr>'
+                                        );
+                                last = group;
+                            }
+                        });
+                    }
+                });
+
+            }
+<table id='ExcepTbl' cellpadding='0' cellspacing='0' border='1' class='display' width='100%'>
+                    <thead>
+                        <tr>
+                            <th>a</th>
+                            <th> b</th>
+                            <th>c</th>
+                            <th>d</th>
+                            <th>e </th>
+                            <th> f</th>
+                            <th> g</th>
+                        </tr>
+                    </thead>
+                </table>
